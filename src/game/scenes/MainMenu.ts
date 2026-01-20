@@ -51,7 +51,7 @@ export class MainMenu extends Scene
         const titleBg = this.add.rectangle(512, 200, 700, 120, 0x000000, 0.7);
         titleBg.setStrokeStyle(4, 0x5CB85C);
 
-        this.add.text(512, 160, '📝 DOCUSIGN', {
+        this.add.text(512, 160, '📝 SaaS', {
             fontFamily: 'Courier New, monospace',
             fontSize: '48px',
             color: '#FFC829',
@@ -68,7 +68,7 @@ export class MainMenu extends Scene
         }).setOrigin(0.5);
 
         // Sous-titre
-        this.add.text(512, 300, 'Explore le monde SaaS de DocuSign !', {
+        this.add.text(512, 300, 'Explore le monde SaaS !', {
             fontFamily: 'Courier New, monospace',
             fontSize: '18px',
             color: '#FFFFFF',
@@ -120,7 +120,7 @@ export class MainMenu extends Scene
         });
 
         // Crédits en bas
-        this.add.text(512, 620, '💚 BNP Paribas | 🔷 Microsoft Azure | 📝 DocuSign', {
+        this.add.text(512, 620, '💚 BNP Paribas | 🔷 Microsoft Azure | 📝 SaaS', {
             fontFamily: 'Courier New, monospace',
             fontSize: '14px',
             color: '#555555',

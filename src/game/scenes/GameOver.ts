@@ -76,7 +76,7 @@ export class GameOver extends Scene
             strokeThickness: 2
         }).setOrigin(0.5);
         
-        this.add.text(512, 250, 'DocuSign Academy', {
+        this.add.text(512, 250, 'SaaS Academy', {
             fontFamily: 'Courier New, monospace',
             fontSize: '20px',
             color: '#1A3D6D'
@@ -136,28 +136,12 @@ export class GameOver extends Scene
         this.add.text(200, totalY, '⭐ SCORE TOTAL', { fontFamily: 'Courier New', fontSize: '14px', color: '#FFFFFF' }).setOrigin(0, 0.5);
         this.add.text(520, totalY, `${score} pts`, { fontFamily: 'Courier New', fontSize: '16px', color: '#FFC829' }).setOrigin(0, 0.5);
         
-        // Message fun
-        const funMessages = [
-            "⛏️ Tu as miné toutes les connaissances SaaS !",
-            "🏗️ Tu as crafté ton expertise cloud !",
-            "💎 Tu as trouvé le diamant du cloud !",
-            "🚀 Prêt pour la migration vers Azure !"
-        ];
-        
-        this.add.text(512, totalY + 50, Phaser.Math.RND.pick(funMessages), {
-            fontFamily: 'Courier New, monospace',
-            fontSize: '14px',
-            color: '#00A4EF',
-            stroke: '#000000',
-            strokeThickness: 2
-        }).setOrigin(0.5);
-        
         // Bouton REJOUER style Minecraft
-        const replayBg = this.add.rectangle(512, totalY + 100, 200, 50, 0x5CB85C);
+        const replayBg = this.add.rectangle(512, totalY + 55, 200, 50, 0x5CB85C);
         replayBg.setStrokeStyle(4, 0x000000);
         replayBg.setInteractive({ useHandCursor: true });
         
-        const replayText = this.add.text(512, totalY + 100, '🔄 REJOUER', {
+        const replayText = this.add.text(512, totalY + 55, '🔄 REJOUER', {
             fontFamily: 'Courier New, monospace',
             fontSize: '20px',
             color: '#FFFFFF',
@@ -176,6 +160,15 @@ export class GameOver extends Scene
         replayBg.on('pointerdown', () => {
             this.scene.start('MainMenu');
         });
+        
+        // Message "Tu as crafté ton expertise cloud" EN DESSOUS du bouton
+        this.add.text(512, totalY + 105, '🏗️ Tu as crafté ton expertise cloud ! 🏗️', {
+            fontFamily: 'Courier New, monospace',
+            fontSize: '14px',
+            color: '#00A4EF',
+            stroke: '#000000',
+            strokeThickness: 2
+        }).setOrigin(0.5);
         
         // Contrôles clavier
         this.input.keyboard?.once('keydown-SPACE', () => this.scene.start('MainMenu'));

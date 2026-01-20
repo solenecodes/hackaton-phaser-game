@@ -77,10 +77,20 @@ export class Game extends Scene
         this.cameras.main.setBackgroundColor(0x5C94FC);
         
         // Logo BNP dans le ciel
-        const bnpSkyLogo = this.add.image(900, 60, 'bnp-logo');
-        bnpSkyLogo.setScale(0.8);
+        const bnpSkyLogo = this.add.image(920, 60, 'bnp-logo');
+        bnpSkyLogo.setScale(0.7);
         bnpSkyLogo.setAlpha(0.9);
         bnpSkyLogo.setDepth(0);
+        
+        // Logo Microsoft dans le ciel (à côté de BNP)
+        const msLogoContainer = this.add.container(820, 60);
+        const msRed = this.add.rectangle(-12, -12, 20, 20, 0xF25022);
+        const msGreen = this.add.rectangle(12, -12, 20, 20, 0x7FBA00);
+        const msBlue = this.add.rectangle(-12, 12, 20, 20, 0x00A4EF);
+        const msYellow = this.add.rectangle(12, 12, 20, 20, 0xFFB900);
+        msLogoContainer.add([msRed, msGreen, msBlue, msYellow]);
+        msLogoContainer.setAlpha(0.9);
+        msLogoContainer.setDepth(0);
         
         // Nuages style Kenney (ronds et doux)
         this.createKenneyCloud(100, 70, 1);
@@ -161,8 +171,8 @@ export class Game extends Scene
         mainBuilding.setStrokeStyle(3, 0xFF9800);
         container.add(mainBuilding);
         
-        // Toit triangulaire
-        const roof = this.add.triangle(0, -80, -80, 40, 0, -30, 80, 40, 0xFFB74D);
+        // Toit triangulaire - aligné sur le bâtiment
+        const roof = this.add.triangle(0, -60, -80, 20, 0, -25, 80, 20, 0xFFB74D);
         roof.setStrokeStyle(3, 0xF57C00);
         container.add(roof);
         
@@ -183,10 +193,10 @@ export class Game extends Scene
         container.add(doorKnob);
         
         // Enseigne
-        const signBg = this.add.rectangle(0, -110, 120, 28, 0xFFC107);
+        const signBg = this.add.rectangle(0, -95, 120, 28, 0xFFC107);
         signBg.setStrokeStyle(2, 0xFF8F00);
         container.add(signBg);
-        const signText = this.add.text(0, -110, '🏠 ACCUEIL', {
+        const signText = this.add.text(0, -95, '🏠 ACCUEIL', {
             fontFamily: 'Arial Black',
             fontSize: '14px',
             color: '#5D4037'
