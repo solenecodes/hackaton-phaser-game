@@ -7,10 +7,11 @@ export class GameOver extends Scene
         super('GameOver');
     }
 
-    create(data: { score: number; easterEgg: boolean })
+    create(data: { score: number; easterEgg: boolean; categoryScores?: { [key: string]: { correct: number; total: number; points: number } } })
     {
         const score = data?.score || 0;
         const easterEgg = data?.easterEgg || false;
+        const categoryScores = data?.categoryScores || {};
         
         // Fond ciel Minecraft
         this.cameras.main.setBackgroundColor(0x87CEEB);
@@ -89,64 +90,74 @@ export class GameOver extends Scene
             strokeThickness: 3
         }).setOrigin(0.5);
         
-        // Score avec icône
-        this.add.text(512, 360, `⭐ SCORE: ${score} ⭐`, {
-            fontFamily: 'Courier New, monospace',
-            fontSize: '28px',
-            color: '#FFC829',
-            stroke: '#000000',
-            strokeThickness: 4
-        }).setOrigin(0.5);
+        // === TABLEAU DES SCORES PAR CATÉGORIE ===
+        const tableY = 330;
         
-        // Badges collectés
-        let badges = '🏆 Accueil | 💻 Tech | ⚖️ Legal';
+        // En-tête du tableau
+        this.add.rectangle(512, tableY, 500, 30, 0x8B4513);
+        this.add.text(200, tableY, 'CATÉGORIE', { fontFamily: 'Courier New', fontSize: '12px', color: '#FFFFFF' }).setOrigin(0, 0.5);
+        this.add.text(380, tableY, 'RÉPONSES', { fontFamily: 'Courier New', fontSize: '12px', color: '#FFFFFF' }).setOrigin(0, 0.5);
+        this.add.text(520, tableY, 'POINTS', { fontFamily: 'Courier New', fontSize: '12px', color: '#FFFFFF' }).setOrigin(0, 0.5);
+        this.add.text(620, tableY, 'BONUS', { fontFamily: 'Courier New', fontSize: '12px', color: '#FFFFFF' }).setOrigin(0, 0.5);
+        
+        // Lignes du tableau
+        const categories = [
+            { name: 'Florine', icon: '🏠', role: 'Accueil / Bases SaaS' },
+            { name: 'Damien', icon: '💻', role: 'Tech / Infrastructure' },
+            { name: 'Christophe', icon: '⚖️', role: 'Cloud / Microsoft' }
+        ];
+        
+        categories.forEach((cat, i) => {
+            const y = tableY + 35 + (i * 32);
+            const catScore = categoryScores[cat.name] || { correct: 0, total: 3, points: 0 };
+            const isPerfect = catScore.correct === catScore.total;
+            const rowColor = i % 2 === 0 ? 0xFFF8DC : 0xF5DEB3;
+            
+            this.add.rectangle(512, y, 500, 28, rowColor);
+            this.add.text(200, y, `${cat.icon} ${cat.name}`, { fontFamily: 'Courier New', fontSize: '11px', color: '#333' }).setOrigin(0, 0.5);
+            this.add.text(380, y, `${catScore.correct}/${catScore.total}`, { fontFamily: 'Courier New', fontSize: '11px', color: isPerfect ? '#00915A' : '#333' }).setOrigin(0, 0.5);
+            this.add.text(520, y, `${catScore.correct * 10} pts`, { fontFamily: 'Courier New', fontSize: '11px', color: '#333' }).setOrigin(0, 0.5);
+            this.add.text(620, y, isPerfect ? '✅ +50' : '—', { fontFamily: 'Courier New', fontSize: '11px', color: isPerfect ? '#00915A' : '#999' }).setOrigin(0, 0.5);
+        });
+        
+        // Ligne Easter Egg si trouvé
         if (easterEgg) {
-            badges += '\n\n🎉 EASTER EGG: OCP SaaS rocks! 🎉';
+            const eggY = tableY + 35 + (3 * 32);
+            this.add.rectangle(512, eggY, 500, 28, 0xFFE4B5);
+            this.add.text(200, eggY, '🤖 CloudBot', { fontFamily: 'Courier New', fontSize: '11px', color: '#FF6B6B' }).setOrigin(0, 0.5);
+            this.add.text(380, eggY, 'EASTER EGG', { fontFamily: 'Courier New', fontSize: '11px', color: '#FF6B6B' }).setOrigin(0, 0.5);
+            this.add.text(520, eggY, '—', { fontFamily: 'Courier New', fontSize: '11px', color: '#999' }).setOrigin(0, 0.5);
+            this.add.text(620, eggY, '🎉 +100', { fontFamily: 'Courier New', fontSize: '11px', color: '#FF6B6B' }).setOrigin(0, 0.5);
         }
         
-        this.add.text(512, 420, badges, {
-            fontFamily: 'Courier New, monospace',
-            fontSize: '14px',
-            color: '#555555'
-        }).setOrigin(0.5);
-        
-        // Logo BNP
-        try {
-            const bnpLogo = this.add.image(350, 490, 'bnp-logo');
-            bnpLogo.setScale(0.08);
-        } catch {
-            this.createPixelBNPLogo(350, 490);
-        }
-        
-        // Logos partenaires
-        this.add.text(512, 490, '💚 BNP | 🔷 Azure | 📝 DocuSign', {
-            fontFamily: 'Courier New, monospace',
-            fontSize: '12px',
-            color: '#888888'
-        }).setOrigin(0.5);
+        // Score total
+        const totalY = tableY + 35 + ((easterEgg ? 4 : 3) * 32) + 10;
+        this.add.rectangle(512, totalY, 500, 35, 0x00915A);
+        this.add.text(200, totalY, '⭐ SCORE TOTAL', { fontFamily: 'Courier New', fontSize: '14px', color: '#FFFFFF' }).setOrigin(0, 0.5);
+        this.add.text(520, totalY, `${score} pts`, { fontFamily: 'Courier New', fontSize: '16px', color: '#FFC829' }).setOrigin(0, 0.5);
         
         // Message fun
         const funMessages = [
             "⛏️ Tu as miné toutes les connaissances SaaS !",
             "🏗️ Tu as crafté ton expertise cloud !",
-            "💎 Tu as trouvé le diamant DocuSign !",
+            "💎 Tu as trouvé le diamant du cloud !",
             "🚀 Prêt pour la migration vers Azure !"
         ];
         
-        this.add.text(512, 570, Phaser.Math.RND.pick(funMessages), {
+        this.add.text(512, totalY + 50, Phaser.Math.RND.pick(funMessages), {
             fontFamily: 'Courier New, monospace',
-            fontSize: '16px',
+            fontSize: '14px',
             color: '#00A4EF',
             stroke: '#000000',
             strokeThickness: 2
         }).setOrigin(0.5);
         
         // Bouton REJOUER style Minecraft
-        const replayBg = this.add.rectangle(512, 630, 200, 50, 0x5CB85C);
+        const replayBg = this.add.rectangle(512, totalY + 100, 200, 50, 0x5CB85C);
         replayBg.setStrokeStyle(4, 0x000000);
         replayBg.setInteractive({ useHandCursor: true });
         
-        const replayText = this.add.text(512, 630, '🔄 REJOUER', {
+        const replayText = this.add.text(512, totalY + 100, '🔄 REJOUER', {
             fontFamily: 'Courier New, monospace',
             fontSize: '20px',
             color: '#FFFFFF',

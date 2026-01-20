@@ -38,6 +38,9 @@ export class Game extends Scene
     correctAnswers: number = 0;
     easterEggFound: boolean = false;
     showingInstructions: boolean = true;
+    
+    // Scores par catégorie
+    categoryScores: { [key: string]: { correct: number; total: number; points: number } } = {};
 
     constructor()
     {
@@ -946,10 +949,20 @@ export class Game extends Scene
 
     endDialog(npc: NPC)
     {
+        let bonusPoints = 0;
         if (this.correctAnswers === npc.questions.length) {
-            this.score += 50;
+            bonusPoints = 50;
+            this.score += bonusPoints;
             this.scoreText.setText(`⭐ ${this.score} pts`);
         }
+        
+        // Sauvegarder le score pour cette catégorie
+        const categoryPoints = (this.correctAnswers * 10) + bonusPoints;
+        this.categoryScores[npc.name] = {
+            correct: this.correctAnswers,
+            total: npc.questions.length,
+            points: categoryPoints
+        };
         
         let message = `🎉 ${npc.successMessage}\n\n⭐ ${this.correctAnswers}/${npc.questions.length} bonnes réponses !`;
         
@@ -986,7 +999,11 @@ export class Game extends Scene
             
             if (this.completedNPCs.size >= 3) {
                 this.time.delayedCall(500, () => {
-                    this.scene.start('GameOver', { score: this.score, easterEgg: this.easterEggFound });
+                    this.scene.start('GameOver', { 
+                        score: this.score, 
+                        easterEgg: this.easterEggFound,
+                        categoryScores: this.categoryScores
+                    });
                 });
             }
         });
